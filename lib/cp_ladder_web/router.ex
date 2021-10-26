@@ -20,6 +20,12 @@ defmodule CpLadderWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/api/v1", CpLadderWeb do
+    pipe_through :api
+
+    resources "/users", UserController, only: [:index, :show, :create, :delete, :update]
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", CpLadderWeb do
   #   pipe_through :api
