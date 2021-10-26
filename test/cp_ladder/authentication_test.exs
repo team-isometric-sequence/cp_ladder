@@ -11,7 +11,7 @@ defmodule CpLadder.AuthenticationTest do
     @invalid_attrs %{email: nil, password_hash: nil}
 
     test "list_users/0 returns all users" do
-      user = user_fixture()
+      user_fixture()
       assert length(Authentication.list_users()) == 1
     end
 

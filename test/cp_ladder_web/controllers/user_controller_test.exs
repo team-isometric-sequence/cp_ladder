@@ -3,7 +3,9 @@ defmodule CpLadderWeb.UserControllerTest do
 
   import CpLadder.AuthenticationFixtures
 
+  alias CpLadder.Guardian
   alias CpLadder.Authentication.User
+  alias CpLadder.Authentication
 
   @create_attrs %{
     email: "some@email",
@@ -22,9 +24,16 @@ defmodule CpLadderWeb.UserControllerTest do
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
+    setup [:create_user]
+
+    test "lists all users with proper authentication", %{conn: conn, user: user} do
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      authenticated_connection =
+        build_conn()
+        |> put_req_header("authorization", "Bearer " <> token)
+      conn = get(authenticated_connection, Routes.user_path(conn, :index))
+      assert json_response(conn, 200)["data"] != []
     end
   end
 
@@ -33,7 +42,13 @@ defmodule CpLadderWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.user_path(conn, :show, id))
+      user = Authentication.get_user!(id)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      authenticated_connection =
+        build_conn()
+        |> put_req_header("authorization", "Bearer " <> token)
+      conn = get(authenticated_connection, Routes.user_path(conn, :show, id))
 
       assert %{
         "id" => ^id,
@@ -47,11 +62,33 @@ defmodule CpLadderWeb.UserControllerTest do
     end
   end
 
+  describe "signup user" do
+    test "renders valid token when data is valid", %{conn: conn} do
+      conn = post(conn, Routes.user_path(conn, :sign_up), user: @create_attrs)
+      assert %{"jwt" => _} = json_response(conn, 201)["data"]
+    end
+  end
+
+  describe "signin user" do
+    setup [:create_user]
+
+    test "renders valid token when data is valid", %{conn: conn, user: user} do
+      conn = post(conn, Routes.user_path(conn, :sign_in), email: user.email, password: user.password)
+      assert %{"jwt" => _} = json_response(conn, 200)["data"]
+    end
+  end
+
   describe "update user" do
     setup [:create_user]
 
-    test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
+    test "renders user when data is valid with proper authentication", %{conn: conn, user: %User{id: id} = user} do
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      authenticated_connection =
+        build_conn()
+        |> put_req_header("authorization", "Bearer " <> token)
+
+      conn = put(authenticated_connection, Routes.user_path(conn, :update, user), user: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.user_path(conn, :show, id))
@@ -63,7 +100,13 @@ defmodule CpLadderWeb.UserControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      authenticated_connection =
+        build_conn()
+        |> put_req_header("authorization", "Bearer " <> token)
+
+      conn = put(authenticated_connection, Routes.user_path(conn, :update, user), user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -72,7 +115,13 @@ defmodule CpLadderWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      authenticated_connection =
+        build_conn()
+        |> put_req_header("authorization", "Bearer " <> token)
+
+      conn = delete(authenticated_connection, Routes.user_path(conn, :delete, user))
       assert response(conn, 204)
 
       assert_error_sent 404, fn ->

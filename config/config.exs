@@ -26,6 +26,11 @@ config :cp_ladder, CpLadderWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :cp_ladder, CpLadder.Mailer, adapter: Swoosh.Adapters.Local
 
+# JWT Authentication related Configuration
+config :cp_ladder, CpLadder.Guardian,
+  issuer: "cp_ladder",
+  secret_key: "UtMwFtFMANcbXCj05II2zKk8mmZD4VApLrXQbfx/IAuKyrtVE4yeFvodrX1Dkq5s" # generated using mix guarian.gen.secret
+
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 

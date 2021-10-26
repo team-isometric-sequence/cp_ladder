@@ -1,6 +1,8 @@
 defmodule CpLadderWeb.Router do
   use CpLadderWeb, :router
 
+  alias CpLadder.Guardian
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,6 +16,10 @@ defmodule CpLadderWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug Guardian.AuthPipeline
+  end
+
   scope "/", CpLadderWeb do
     pipe_through :browser
 
@@ -23,7 +29,17 @@ defmodule CpLadderWeb.Router do
   scope "/api/v1", CpLadderWeb do
     pipe_through :api
 
+    resources "/users", UserController, only: [:create]
+
+    post "/sign_up", UserController, :sign_up
+    post "/sign_in", UserController, :sign_in
+  end
+
+  scope "/api/v1", CpLadderWeb do
+    pipe_through [:api, :jwt_authenticated]
+
     resources "/users", UserController, only: [:index, :show, :create, :delete, :update]
+    get "/profile", UserController, :profile
   end
 
   # Other scopes may use custom stacks.

@@ -1,6 +1,8 @@
 defmodule CpLadderWeb.UserController do
   use CpLadderWeb, :controller
 
+  alias CpLadder.Guardian
+
   alias CpLadder.Authentication
   alias CpLadder.Authentication.User
 
@@ -18,6 +20,32 @@ defmodule CpLadderWeb.UserController do
       |> put_resp_header("location", Routes.user_path(conn, :show, user))
       |> render("show.json", user: user)
     end
+  end
+
+  def sign_in(conn, %{"email" => email, "password" => password}) do
+    case Authentication.token_sign_in(email, password) do
+      {:ok, token, _claims} ->
+        conn
+        |> render("jwt.json", jwt: token)
+      _ ->
+        conn
+        |> put_status(:unauthorized)
+        |> render("errors.json", %{message: "wrong authentication information"})
+    end
+  end
+
+  def sign_up(conn, %{"user" => user_params}) do
+    with {:ok, %User{} = user} <- Authentication.create_user(user_params),
+        {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
+      conn
+      |> put_status(:created)
+      |> render("jwt.json", jwt: token)
+    end
+  end
+
+  def profile(conn, _params) do
+    user = Guardian.Plug.current_resource(conn)
+    conn |> render("show.json", user: user)
   end
 
   def show(conn, %{"id" => id}) do
