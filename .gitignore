@@ -32,3 +32,6 @@ cp_ladder-*.tar
 npm-debug.log
 /assets/node_modules/
 
+
+/client/node_modules/
+/node_modules/
