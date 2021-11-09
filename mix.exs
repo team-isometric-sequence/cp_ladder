@@ -51,7 +51,8 @@ defmodule CpLadder.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:comeonin, "~> 5.0"},
       {:bcrypt_elixir, "~> 2.0"},
-      {:guardian, "~> 2.2"}
+      {:guardian, "~> 2.2"},
+      {:corsica, "~> 1.0"}
     ]
   end
 

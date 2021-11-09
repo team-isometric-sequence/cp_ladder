@@ -63,6 +63,8 @@ config :cp_ladder, CpLadderWeb.Endpoint,
     ]
   ]
 
+config :cp_ladder, origins: ["http://localhost:3000", "http://0.0.0.0:3000"]
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

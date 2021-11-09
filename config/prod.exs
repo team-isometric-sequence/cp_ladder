@@ -16,6 +16,8 @@ config :cp_ladder, CpLadderWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :cp_ladder, origins: ["https://cp-ladder.kodingwarrior.dev"]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

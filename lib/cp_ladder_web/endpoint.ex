@@ -46,5 +46,9 @@ defmodule CpLadderWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+  plug Corsica,
+    origins: Application.fetch_env!(:cp_ladder, :origins),
+    allow_credentials: true,
+    max_age: 600
   plug CpLadderWeb.Router
 end
