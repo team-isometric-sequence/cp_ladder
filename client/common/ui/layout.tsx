@@ -16,9 +16,8 @@ import {
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 
-const Links = ['Dashboard', 'Projects', 'Team'];
+const Links = ['문제 목록 조회', '즐겨찾기'];
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -43,13 +42,13 @@ const Layout: React.FC = ({ children }) => {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            icon={isOpen ? <div>X</div> : <div>=</div>}
             aria-label={'Open Menu'}
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
+            <Box>CP Ladder</Box>
             <HStack
               as={'nav'}
               spacing={4}
@@ -60,14 +59,6 @@ const Layout: React.FC = ({ children }) => {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Button
-              variant={'solid'}
-              colorScheme={'teal'}
-              size={'sm'}
-              mr={4}
-              leftIcon={<AddIcon />}>
-              Action
-            </Button>
             <Menu>
               <MenuButton
                 as={Button}
@@ -86,13 +77,13 @@ const Layout: React.FC = ({ children }) => {
                 <MenuItem>Link 1</MenuItem>
                 <MenuItem>Link 2</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>로그인/로그아웃</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
         </Flex>
 
-        {isOpen ? (
+        {isOpen && (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => (
@@ -100,7 +91,7 @@ const Layout: React.FC = ({ children }) => {
               ))}
             </Stack>
           </Box>
-        ) : null}
+        )}
       </Box>
 
       <Box p={4}>

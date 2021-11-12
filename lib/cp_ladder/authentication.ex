@@ -4,7 +4,6 @@ defmodule CpLadder.Authentication do
   """
 
   import Ecto.Query, warn: false
-  import Comeonin.Bcrypt, only: [dummy_checkpw: 0]
   import Bcrypt, only: [verify_pass: 2]
 
   alias CpLadder.Repo
@@ -122,7 +121,6 @@ defmodule CpLadder.Authentication do
   defp get_by_email(email) when is_binary(email) do
     case Repo.get_by(User, email: email) do
       nil ->
-        dummy_checkpw()
         {:error, "Login error."}
       user ->
         {:ok, user}

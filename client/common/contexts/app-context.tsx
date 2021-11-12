@@ -29,7 +29,7 @@ const AppContextProvider: React.FC = ({
   }, []);
 
   const context = {
-    isLoggedIn: !!profile,
+    isLoggedIn: Object.keys(profile).length !== 0,
     user: profile,
   }
 

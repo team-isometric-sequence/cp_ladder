@@ -18,9 +18,11 @@ const AuthenticationWrapper: React.FC<IAuthenticationWrapper> = ({ isLoggedIn, c
     );
   }
 
-  if (!window.location.pathname.includes("/login")) {
-    PathRouter.push(`/login?next=${window.location.pathname}`);
-    return <Loader />;
+  if (typeof(window) !== "undefined") {
+    if (!window.location.pathname.includes("/login")) {
+      PathRouter.push(`/login?next=${window.location.pathname}`);
+      return <Loader />;
+    }
   }
 
   return (

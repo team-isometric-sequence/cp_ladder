@@ -11,6 +11,7 @@ axios.interceptors.request.use(
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
+    headers["Accept"] = "application/json";
     config.headers = headers;
     config.url = `${process.env.NEXT_PUBLIC_HOST}${config.url}`;
     config.withCredentials = true;
