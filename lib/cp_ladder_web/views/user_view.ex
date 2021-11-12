@@ -18,16 +18,6 @@ defmodule CpLadderWeb.UserView do
     %{
       id: user.id,
       email: user.email,
-      password_hash: user.password_hash,
-      boj_handle: user.boj_handle,
-    }
-  end
-
-  def render("user.json", %{user: user}) do
-    %{
-      id: user.id,
-      email: user.email,
-      password_hash: user.password_hash,
       boj_handle: user.boj_handle,
     }
   end
