@@ -18,7 +18,7 @@ defmodule CpLadder.Authentication.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation]) # Remove hash, add pw + pw confirmation
+    |> cast(attrs, [:email, :password, :password_confirmation, :boj_handle]) # Remove hash, add pw + pw confirmation
     |> validate_required([:email, :password, :password_confirmation]) # Remove hash, add pw + pw confirmation
     |> validate_format(:email, ~r/@/) # Check that email is valid
     |> validate_length(:password, min: 8) # Check that password length is >= 8
