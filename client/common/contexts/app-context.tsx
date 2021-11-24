@@ -6,6 +6,7 @@ import { LoginRequiredError } from "common/exceptions";
 const AppContext = createContext<{
   isLoggedIn?: boolean;
   user?: {
+    username?: string;
     email? : string;
   };
 }>({});

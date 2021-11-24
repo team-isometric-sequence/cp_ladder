@@ -17,8 +17,8 @@ defmodule CpLadderWeb.UserView do
   def render("user.json", %{user: user}) do
     %{
       id: user.id,
+      username: user.username,
       email: user.email,
-      boj_handle: user.boj_handle,
     }
   end
 

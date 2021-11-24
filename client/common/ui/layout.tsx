@@ -1,4 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
+import { useRouter } from "next/router";
+
 import {
   Box,
   Flex,
@@ -17,6 +19,9 @@ import {
   Stack,
 } from '@chakra-ui/react';
 
+import LocalStorageService from 'common/services/local-storage-service';
+import AppContext from 'common/contexts/app-context';
+
 const Links = ['문제 목록 조회', '즐겨찾기'];
 
 const NavLink = ({ children }: { children: ReactNode }) => (
@@ -34,7 +39,10 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 );
 
 const Layout: React.FC = ({ children }) => {
+  const { isLoggedIn, user } = useContext(AppContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const router = useRouter();
 
   return (
     <>
@@ -74,10 +82,30 @@ const Layout: React.FC = ({ children }) => {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                {isLoggedIn ? (
+                  <MenuItem>Logged in as&nbsp;<b>{user?.username}</b></MenuItem>
+                ) : (
+                  <></>
+                )}
                 <MenuDivider />
-                <MenuItem>로그인/로그아웃</MenuItem>
+                {isLoggedIn ? (
+                  <MenuItem
+                    onClick={() => {
+                      LocalStorageService.setAccessToken("");
+                      router.push("/login");
+                    }}
+                  >
+                    로그아웃
+                  </MenuItem>
+                ) : (
+                  <MenuItem
+                    onClick={()=> {
+                      router.push("/login");
+                    }}
+                  >
+                    로그인
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           </Flex>
