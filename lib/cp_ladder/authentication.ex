@@ -104,6 +104,39 @@ defmodule CpLadder.Authentication do
     User.changeset(user, attrs)
   end
 
+  def request_external_authentication(username, password) do
+    client_id = System.get_env("CP_LADDER_CLIENT_ID")
+    client_secret = System.get_env("CP_LADDER_CLIENT_SECRET")
+    site_url = "https://t-time-api.hongik.dev"
+
+    credentials = "#{client_id}:#{client_secret}"
+
+    # See https://github.com/jazzband/django-oauth-toolkit/blob/3a9541f903f8f945ff3f75a13b4953091717fffa/oauth2_provider/oauth2_validators.py#L85-L129
+    response = HTTPoison.post!(
+      site_url <> "/o/token/",
+      {
+        :form,
+        [
+          username: username,
+          password: password,
+          grant_type: "password",
+          scope: "read"
+        ]
+      },
+      %{
+        "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization" => "Basic " <> Base.encode64(credentials)
+      }
+    )
+
+    case response.status_code do
+      200 ->
+        {:ok, Poison.decode!(response.body)}
+      _ ->
+        {:error, "Authentication Failed"}
+    end
+  end
+
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do
       {:ok, user} ->

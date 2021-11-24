@@ -52,7 +52,9 @@ defmodule CpLadder.MixProject do
       {:comeonin, "~> 5.0"},
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 2.2"},
-      {:corsica, "~> 1.0"}
+      {:corsica, "~> 1.0"},
+      {:httpoison, "~> 1.8"},
+      {:poison, "~> 5.0"}
     ]
   end
 
