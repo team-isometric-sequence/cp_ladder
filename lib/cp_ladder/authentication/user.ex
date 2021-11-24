@@ -4,9 +4,9 @@ defmodule CpLadder.Authentication.User do
   import Bcrypt, only: [hash_pwd_salt: 1]
 
   schema "users" do
+    field :username, :string
     field :email, :string
     field :password_hash, :string
-    field :boj_handle, :string
 
     # Virtual fields:
     field :password, :string, virtual: true
@@ -18,13 +18,12 @@ defmodule CpLadder.Authentication.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation, :boj_handle]) # Remove hash, add pw + pw confirmation
-    |> validate_required([:email, :password, :password_confirmation]) # Remove hash, add pw + pw confirmation
+    |> cast(attrs, [:email, :username, :password, :password_confirmation]) # Remove hash, add pw + pw confirmation
+    |> validate_required([:email, :username, :password, :password_confirmation]) # Remove hash, add pw + pw confirmation
     |> validate_format(:email, ~r/@/) # Check that email is valid
     |> validate_length(:password, min: 8) # Check that password length is >= 8
     |> validate_confirmation(:password) # Check that password === password_confirmation
     |> unique_constraint(:email)
-    |> unique_constraint(:boj_handle)
     |> put_password_hash # Add put_password_hash to changeset pipeline
   end
 

@@ -8,7 +8,6 @@ defmodule CpLadder.AuthenticationFixtures do
   Generate a unique user email.
   """
   def unique_user_email, do: "some email#{System.unique_integer([:positive])}@acme.com"
-  def unique_boj_handle, do: "some boj_handle#{System.unique_integer([:positive])}"
 
   @doc """
   Generate a user.
@@ -20,7 +19,6 @@ defmodule CpLadder.AuthenticationFixtures do
         email: attrs[:email] || unique_user_email(),
         password: attrs[:password] || "some password",
         password_confirmation: attrs[:password_confirmation] || "some password",
-        boj_handle: attrs[:boj_handle] || unique_boj_handle(),
       })
       |> CpLadder.Authentication.create_user()
 
