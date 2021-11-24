@@ -42,13 +42,13 @@ const LoginPage = () => {
       <Box my={4} textAlign="left">
         <Formik
           initialValues={{
-            email: "",
+            username: "",
             password: "",
           }}
           onSubmit={(values, actions) => {
             setKey(key + 1);
             setLoading(true);
-            UserApi.login(values.email, values.password)
+            UserApi.login(values.username, values.password)
               .then((result: any) => {
                 if (result.ok) {
                   console.log(result);
@@ -70,8 +70,8 @@ const LoginPage = () => {
                 <FormLabel>User Name</FormLabel>
                 <Input
                   type="text"
-                  placeholder="이메일을 입력"
-                  name="email"
+                  placeholder="ID를 입력"
+                  name="username"
                   size="lg"
                   onChange={handleChange}
                   onBlur={handleBlur}

@@ -10,9 +10,9 @@ export default class UserApi {
     }
   }
 
-  static async login(email: string, password: string) {
+  static async login(username: string, password: string) {
     try {
-      const res = await axios.post('/api/v1/sign_in', { email, password });
+      const res = await axios.post('/api/v1/sign_in', { username, password });
       return res;
     } catch (e) {
       return Promise.reject(e);

@@ -4,7 +4,6 @@ defmodule CpLadder.Authentication do
   """
 
   import Ecto.Query, warn: false
-  import Bcrypt, only: [verify_pass: 2]
 
   alias CpLadder.Repo
   alias CpLadder.Guardian
@@ -137,34 +136,65 @@ defmodule CpLadder.Authentication do
     end
   end
 
-  def token_sign_in(email, password) do
-    case email_password_auth(email, password) do
+  def token_sign_in(username, password) do
+    case try_login(username, password) do
       {:ok, user} ->
+        IO.puts(Kernel.inspect(user))
         Guardian.encode_and_sign(user)
       _ ->
         {:error, :unauthorized}
     end
   end
 
-  defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
-    with {:ok, user} <- get_by_email(email),
-    do: verify_password(password, user)
+  defp try_login(username, password) when is_binary(username) and is_binary(password) do
+    case request_external_authentication(username, password) do
+      {:ok, payload} ->
+        find_user_by_oauth_payload(payload)
+      _ ->
+        {:error, :unauthorized}
+    end
+  end
+
+  defp find_user_by_oauth_payload(payload) do
+    {:ok, member} = Map.fetch(payload, "member")
+    {:ok, email} = Map.fetch(member, "email")
+
+    case get_by_email(email) do
+      {:ok, user} ->
+        {:ok, user}
+      _ ->
+        create_oauth_user_locally(member)
+    end
+  end
+
+  defp create_oauth_user_locally(payload) do
+    password_candidate = Base.encode64(:crypto.strong_rand_bytes(20))
+
+    %{
+      "username" => username,
+      "email" => email,
+    } = payload
+
+    user_attrs = %{
+      "username" => username,
+      "email" => email,
+    }
+
+    password_attrs = %{
+      "password" => password_candidate,
+      "password_confirmation" => password_candidate
+    }
+
+    attrs = Map.merge(user_attrs, password_attrs)
+    create_user(attrs)
   end
 
   defp get_by_email(email) when is_binary(email) do
     case Repo.get_by(User, email: email) do
       nil ->
-        {:error, "Login error."}
+        {:error, "User Not Found."}
       user ->
         {:ok, user}
-    end
-  end
-
-  defp verify_password(password, %User{} = user) when is_binary(password) do
-    if verify_pass(password, user.password_hash) do
-      {:ok, user}
-    else
-      {:error, :invalid_password}
     end
   end
 end
