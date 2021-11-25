@@ -10,13 +10,13 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :cp_ladder, CpLadderWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  url: [scheme: "https", host: "cp-ladder-api.hongik.dev", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
 
 # Do not print debug messages in production
 config :logger, level: :info
 
-config :cp_ladder, origins: ["https://cp-ladder.kodingwarrior.dev"]
+config :cp_ladder, origins: ["https://cp-ladder.hongik.dev"]
 
 # ## SSL Support
 #
