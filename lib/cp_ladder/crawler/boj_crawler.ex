@@ -1,4 +1,6 @@
 defmodule CpLadder.Crawler.BojCrawler do
+  alias CpLadder.HonorFarming
+
   def crawl_problems() do
     Enum.each(
       1..300,
@@ -6,7 +8,13 @@ defmodule CpLadder.Crawler.BojCrawler do
         html = HTTPoison.get!("https://www.acmicpc.net/problemset/" <> Integer.to_string(page)).body
         problem_list = extract_problems_from_index_page(html)
         Process.sleep(200)
-        Enum.each problem_list, fn problem -> IO.puts(problem) end
+        Enum.each(
+          problem_list,
+          fn problem ->
+            boj_pk = problem |> Integer.parse |> elem(0)
+            HonorFarming.find_or_create_problem(boj_pk)
+          end
+        )
       end
     )
   end
@@ -35,8 +43,16 @@ defmodule CpLadder.Crawler.BojCrawler do
 
                     problems = extract_problems_from_user(html)
 
-                    IO.puts(username)
-                    IO.puts(length(problems))
+                    boj_user = HonorFarming.find_or_create_boj_user(username)
+
+                    Process.sleep(200)
+                    Enum.each(
+                      problems,
+                      fn problem_number ->
+                        problem = HonorFarming.find_or_create_problem(problem_number)
+                        HonorFarming.find_or_create_problem_solver(problem.id, boj_user.id)
+                      end
+                    )
                   end
                 )
               {:cont, acc}
