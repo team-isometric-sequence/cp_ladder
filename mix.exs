@@ -54,7 +54,8 @@ defmodule CpLadder.MixProject do
       {:guardian, "~> 2.2"},
       {:corsica, "~> 1.0"},
       {:httpoison, "~> 1.8"},
-      {:poison, "~> 5.0"}
+      {:poison, "~> 5.0"},
+      {:scrivener_ecto, "~> 2.0"}
     ]
   end
 
