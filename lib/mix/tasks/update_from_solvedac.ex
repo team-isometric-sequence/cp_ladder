@@ -9,10 +9,7 @@ defmodule Mix.Tasks.UpdateFromSolvedac do
 
   @impl Mix.Task
   def run(_) do
-    [:hackney, :postgrex, :ecto]
-    |> Enum.each(&Application.ensure_all_started/1)
-
-    CpLadder.Repo.start_link()
+    Mix.Task.run "app.start"
 
     CpLadder.Crawler.SolvedacCrawler.crawl_solvedac_tiers()
   end

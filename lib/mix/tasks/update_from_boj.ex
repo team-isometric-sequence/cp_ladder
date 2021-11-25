@@ -9,10 +9,7 @@ defmodule Mix.Tasks.UpdateFromBoj do
 
   @impl Mix.Task
   def run(_) do
-    [:hackney, :postgrex, :ecto]
-    |> Enum.each(&Application.ensure_all_started/1)
-
-    CpLadder.Repo.start_link()
+    Mix.Task.run "app.start"
 
     CpLadder.Crawler.BojCrawler.crawl_problems()
     CpLadder.Crawler.BojCrawler.crawl_school("홍익대학교")
