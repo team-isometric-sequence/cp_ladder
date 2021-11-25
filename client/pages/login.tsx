@@ -104,7 +104,7 @@ const LoginPage = () => {
                     color="teal"
                   />
                 ) : (
-                  'Sign In'
+                  'Sign in with Hongik T-Time Hub'
                 )}
               </Button>
             </Form>
