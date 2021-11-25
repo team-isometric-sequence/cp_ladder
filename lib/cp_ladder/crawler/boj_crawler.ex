@@ -5,7 +5,7 @@ defmodule CpLadder.Crawler.BojCrawler do
     Enum.each(
       1..300,
       fn page ->
-        html = HTTPoison.get!("https://www.acmicpc.net/problemset/" <> Integer.to_string(page)).body
+        html = HTTPoison.get!("https://www.acmicpc.net/problemset/" <> Integer.to_string(page), [], [timeout: 500_000, recv_timeout: 500_000]).body
         problem_list = extract_problems_from_index_page(html)
         Process.sleep(200)
         Enum.each(
@@ -20,7 +20,7 @@ defmodule CpLadder.Crawler.BojCrawler do
   end
 
   def crawl_school(school) do
-    school_ranking_page_html = HTTPoison.get!("https://www.acmicpc.net/ranklist/school").body
+    school_ranking_page_html = HTTPoison.get!("https://www.acmicpc.net/ranklist/school", [], [timeout: 500_000, recv_timeout: 500_000]).body
     {:ok, href} = extract_school_url_from_ranking(school_ranking_page_html, school)
 
     1..20
@@ -28,7 +28,7 @@ defmodule CpLadder.Crawler.BojCrawler do
         :ok,
         fn (page, acc) ->
           url = "https://www.acmicpc.net" <> href <> "/" <> Integer.to_string(page)
-          response = HTTPoison.get!(url)
+          response = HTTPoison.get!(url, [], [timeout: 500_000, recv_timeout: 500_000])
 
           case response.status_code do
             200 ->
@@ -39,7 +39,7 @@ defmodule CpLadder.Crawler.BojCrawler do
               |> Enum.each(
                   fn username ->
                     url = "https://www.acmicpc.net/user/" <> username
-                    html = HTTPoison.get!(url).body
+                    html = HTTPoison.get!(url, [], [timeout: 500_000, recv_timeout: 500_000]).body
 
                     problems = extract_problems_from_user(html)
 

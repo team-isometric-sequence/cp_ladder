@@ -28,7 +28,7 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
     url = "https://solved.ac/api/v3/problem/lookup?problemIds=" <> query_string
     Process.sleep(200)
 
-    response = HTTPoison.get!(url)
+    response = HTTPoison.get!(url, [], [timeout: 500_000, recv_timeout: 500_000])
     case response.status_code do
       200 ->
         jsonArray =
