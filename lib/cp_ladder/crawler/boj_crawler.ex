@@ -51,6 +51,9 @@ defmodule CpLadder.Crawler.BojCrawler do
                       fn problem_number ->
                         problem = HonorFarming.find_or_create_problem(problem_number)
                         HonorFarming.find_or_create_problem_solver(problem.id, boj_user.id)
+
+                        problem
+                        |> HonorFarming.update_problem(%{is_already_solved: true})
                       end
                     )
                   end

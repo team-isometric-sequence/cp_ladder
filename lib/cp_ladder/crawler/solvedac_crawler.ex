@@ -44,6 +44,7 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
                 "level" => tier,
                 "acceptedUserCount" => solved_count,
                 "averageTries" => submission_rate,
+                "isSolvable" => is_solvable
               } = json
 
               problem = HonorFarming.find_or_create_problem(boj_pk)
@@ -52,7 +53,8 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
                   title: title,
                   tier: tier,
                   solved_count: solved_count,
-                  submission_rcount: solved_count * (submission_rate || 0)
+                  submission_rcount: solved_count * (submission_rate || 0),
+                  is_solvable: is_solvable
                 })
             end
           )

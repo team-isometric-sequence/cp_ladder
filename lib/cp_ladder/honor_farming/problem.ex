@@ -10,12 +10,25 @@ defmodule CpLadder.HonorFarming.Problem do
     field :solved_count, :integer
     field :submission_count, :integer
 
+    field :is_solvable, :boolean
+    field :is_already_solved, :boolean
+
     timestamps()
   end
 
   @doc false
   def changeset(problem, attrs) do
+    updatable_fields = [
+      :title,
+      :problem_number,
+      :tier,
+      :solved_count,
+      :submission_count,
+      :is_solvable,
+      :is_already_solved
+    ]
+
     problem
-    |> cast(attrs, [:title, :problem_number, :tier, :solved_count, :submission_count])
+    |> cast(attrs, updatable_fields)
   end
 end
