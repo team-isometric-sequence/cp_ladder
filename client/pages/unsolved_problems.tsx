@@ -11,7 +11,9 @@ import {
   Tr,
   Td,
   Th,
+  IconButton
 } from "@chakra-ui/react";
+import { LinkIcon } from "@chakra-ui/icons";
 
 import Loader from "common/ui/loader";
 import Paginator, { PageInfoProps } from "common/ui/paginator";
@@ -88,6 +90,18 @@ const UnsolvedProblemsPage: NextPage = () => {
               <SolvedacBadge tier={problem.tier}/>
               &nbsp;
               {problem.problemNumber}
+              &nbsp;
+              <a
+                target="_blank"
+                href={`https://acmicpc.net/problem/${problem.problemNumber}`}
+                rel="noreferrer"
+              >
+                <IconButton
+                  size={'s'}
+                  icon={<LinkIcon />}
+                  aria-label={'Open BOJ Problem Page'}
+                />
+              </a>
             </Td>
             <Td>{problem.title}</Td>
             <Td>{problem.solvedCount}</Td>
