@@ -18,6 +18,7 @@ import {
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 import LocalStorageService from 'common/services/local-storage-service';
 import AppContext from 'common/contexts/app-context';
@@ -49,7 +50,7 @@ const Layout: React.FC = ({ children }) => {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
-            icon={isOpen ? <div>X</div> : <div>=</div>}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={'Open Menu'}
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
