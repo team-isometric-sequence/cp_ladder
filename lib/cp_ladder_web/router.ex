@@ -33,6 +33,8 @@ defmodule CpLadderWeb.Router do
 
     post "/sign_up", UserController, :sign_up
     post "/sign_in", UserController, :sign_in
+
+    resources "/problems", ProblemController, only: [:index, :show]
   end
 
   scope "/api/v1", CpLadderWeb do

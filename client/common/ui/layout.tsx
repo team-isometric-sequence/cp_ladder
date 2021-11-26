@@ -22,9 +22,7 @@ import {
 import LocalStorageService from 'common/services/local-storage-service';
 import AppContext from 'common/contexts/app-context';
 
-const Links = ['문제 목록 조회', '즐겨찾기'];
-
-const NavLink = ({ children }: { children: ReactNode }) => (
+const NavLink: React.FC<any> = ({ children, ...props }) => (
   <Link
     px={2}
     py={1}
@@ -33,7 +31,8 @@ const NavLink = ({ children }: { children: ReactNode }) => (
       textDecoration: 'none',
       bg: useColorModeValue('gray.200', 'gray.700'),
     }}
-    href={'#'}>
+    {...props}
+  >
     {children}
   </Link>
 );
@@ -61,9 +60,12 @@ const Layout: React.FC = ({ children }) => {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
+              <NavLink href="/unsolved_problems">
+                학교에서 풀지 않은 문제 목록
+              </NavLink>
+              <NavLink href="#">
+                즐겨찾기 (공사 중)
+              </NavLink>
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
@@ -114,9 +116,12 @@ const Layout: React.FC = ({ children }) => {
         {isOpen && (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
+              <NavLink href="/unsolved_problems">
+                학교에서 풀지 않은 문제 목록
+              </NavLink>
+              <NavLink href="#">
+                즐겨찾기 (공사 중)
+              </NavLink>
             </Stack>
           </Box>
         )}

@@ -23,6 +23,43 @@ defmodule CpLadder.HonorFarming do
     Repo.all(Problem)
   end
 
+  @spec list_unsolved_problems(keyword | map) :: Scrivener.Page.t(Problem)
+  def list_unsolved_problems(params) do
+    allow_unranked = params |> Map.get("allow_unranked", 0)
+
+    query =
+      Problem
+      |> where([p], p.is_solvable == true and p.is_already_solved == false)
+
+    query = if allow_unranked == 1 do
+      query
+    else
+      query
+      |> where([p], p.tier > 0)
+    end
+
+    page =
+      query
+      |> order_by(^generate_filter_option(params))
+      |> Repo.paginate(params)
+
+    page
+  end
+
+  defp generate_filter_option(params) do
+    order_by = params |> Map.get("order_by")
+
+    case order_by do
+      "tier_asc" -> [asc: :tier]
+      "solved_count_asc" -> [asc: :solved_count]
+      "submission_count_asc" -> [asc: :submission_count]
+      "tier_desc" -> [desc: :tier]
+      "solved_count_desc" -> [desc: :solved_count]
+      "submission_count_desc" -> [desc: :submission_count]
+      _ -> [asc: :tier]
+    end
+  end
+
   @doc """
   Gets a single problem.
 
