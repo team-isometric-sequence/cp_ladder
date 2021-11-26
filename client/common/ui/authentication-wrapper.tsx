@@ -10,6 +10,16 @@ type IAuthenticationWrapper = {
 }
 
 const AuthenticationWrapper: React.FC<IAuthenticationWrapper> = ({ isLoggedIn, children }) => {
+  if (typeof(window) !== "undefined") {
+    if (window.location.pathname.includes("/unsolved_problems")) {
+      return (
+        <Layout>
+          {children}
+        </Layout>
+      )
+    }
+  }
+
   if (isLoggedIn) {
     return (
       <Layout>
