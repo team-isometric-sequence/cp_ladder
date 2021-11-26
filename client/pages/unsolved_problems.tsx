@@ -16,6 +16,8 @@ import {
 import Loader from "common/ui/loader";
 import Paginator, { PageInfoProps } from "common/ui/paginator";
 
+import SolvedacBadge from "common/components/solvedac-badge";
+
 import ProblemApi from "api/problem-api";
 
 type IProblem = {
@@ -73,14 +75,20 @@ const UnsolvedProblemsPage: NextPage = () => {
 
       <Table variant="simple">
         <Thead>
-          <Th>문제 번호</Th>
+          <Th>
+            문제 번호
+          </Th>
           <Th>문제 제목</Th>
           <Th>맞힌 사람 수</Th>
         </Thead>
         <Tbody>
         {problems.map((problem) => (
           <Tr key={`problem-row-${problem.problemNumber}`}>
-            <Td>{problem.problemNumber}</Td>
+            <Td>
+              <SolvedacBadge tier={problem.tier}/>
+              &nbsp;
+              {problem.problemNumber}
+            </Td>
             <Td>{problem.title}</Td>
             <Td>{problem.solvedCount}</Td>
           </Tr>
