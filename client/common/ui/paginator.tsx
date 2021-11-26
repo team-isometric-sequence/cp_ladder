@@ -3,6 +3,8 @@ import { FC } from "react";
 import styled from "@emotion/styled";
 
 import {
+  Container,
+  Box,
   Stack as PaginationStack,
   Button
 } from "@chakra-ui/react";
@@ -19,6 +21,7 @@ export type PageInfoProps = {
   count: number;
   currentPage: number;
   hasNext: boolean;
+  pageSize: number;
   hasPrevious: boolean;
   startIndex: number;
   endIndex: number;
@@ -73,40 +76,48 @@ const Paginator: FC<PaginatorProps> = ({
   setPage,
   className = "",
 }) => {
-  const { count, hasNext, currentPage, hasPrevious, endIndex } = pageInfo;
+  const { pageSize, count, hasNext, currentPage, hasPrevious, endIndex } = pageInfo;
+
+  const startOfRange = (currentPage - 1) * 100 + 1;
+  const endOfRange = Math.min((currentPage * pageSize), count);
 
   return (
-    <PaginatorWrapper>
-      <PaginationStack className={className} direction="row">
-        <PaginationItem
-          isDisabled={!hasPrevious}
-          onClick={() => setPage(currentPage - 1)}
-        >
-          이전
-        </PaginationItem>
-        <PaginationItem isActive={currentPage == 1} onClick={() => setPage(1)}>
-          1
-        </PaginationItem>
-        <NearestPaginationRange
-          pageInfo={pageInfo}
-          setPage={setPage}
-        />
-        {1 !== endIndex && (
+    <Container>
+      <PaginatorWrapper>
+        <PaginationStack mt={5} className={className} direction="row">
           <PaginationItem
-            isActive={currentPage == endIndex}
-            onClick={() => setPage(endIndex)}
+            isDisabled={!hasPrevious}
+            onClick={() => setPage(currentPage - 1)}
           >
-            {endIndex}
+            이전
           </PaginationItem>
-        )}
-        <PaginationItem
-          isDisabled={!hasNext}
-          onClick={() => setPage(currentPage + 1)}
-        >
-          다음
-        </PaginationItem>
-      </PaginationStack>
-    </PaginatorWrapper>
+          <PaginationItem isActive={currentPage == 1} onClick={() => setPage(1)}>
+            1
+          </PaginationItem>
+          <NearestPaginationRange
+            pageInfo={pageInfo}
+            setPage={setPage}
+          />
+          {1 !== endIndex && (
+            <PaginationItem
+              isActive={currentPage == endIndex}
+              onClick={() => setPage(endIndex)}
+            >
+              {endIndex}
+            </PaginationItem>
+          )}
+          <PaginationItem
+            isDisabled={!hasNext}
+            onClick={() => setPage(currentPage + 1)}
+          >
+            다음
+          </PaginationItem>
+        </PaginationStack>
+      </PaginatorWrapper>
+      <Box my={3} mx="auto" textAlign="center">
+        {startOfRange} - {endOfRange} of {count} entries
+      </Box>
+    </Container>
   );
 };
 

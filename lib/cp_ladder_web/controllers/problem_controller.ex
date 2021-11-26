@@ -22,8 +22,9 @@ defmodule CpLadderWeb.ProblemController do
     last_page = div(page.total_entries + page.page_size - 1, page.page_size)
 
     %{
-      count: page.total_pages,
+      count: page.total_entries,
       currentPage: page.page_number,
+      pageSize: page.page_size,
       hasPrevious: page.page_number != first_page,
       hasNext: page.page_number != last_page,
       startIndex: first_page,
