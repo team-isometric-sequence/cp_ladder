@@ -14,11 +14,17 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
+  timeout = 6 * 3600 * 1000
+
   config :cp_ladder, CpLadder.Repo,
     ssl: true,
     url: database_url,
     show_sensitive_data_on_connection_error: true,
-    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    ownership_timeout: timeout,
+    timeout: timeout,
+    pool_timeout: timeout
+
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
