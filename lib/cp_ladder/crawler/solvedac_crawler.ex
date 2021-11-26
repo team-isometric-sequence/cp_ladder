@@ -55,7 +55,7 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
                   title: title,
                   tier: tier,
                   solved_count: solved_count,
-                  submission_count: solved_count * submission_rate,
+                  submission_count: round(solved_count * submission_rate),
                   is_solvable: is_solvable
                 })
             end
