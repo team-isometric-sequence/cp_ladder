@@ -1,4 +1,5 @@
 defmodule CpLadder.Crawler.SolvedacCrawler do
+  import Ecto.Query
   alias CpLadder.HonorFarming
   alias CpLadder.HonorFarming.Problem
 
@@ -12,6 +13,7 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
         fn current_page ->
           pagination =
             Problem
+            |> order_by(asc: :tier)
             |> CpLadder.Repo.paginate(page: current_page, page_size: page_size)
 
           query_string =
