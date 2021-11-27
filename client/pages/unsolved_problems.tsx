@@ -11,9 +11,17 @@ import {
   Tr,
   Td,
   Th,
-  IconButton
+  IconButton,
+  Box,
+  Heading,
+  Flex,
+  Spacer,
+  Button,
+  Text,
 } from "@chakra-ui/react";
-import { LinkIcon } from "@chakra-ui/icons";
+import { LinkIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+
+import { Filter } from "react-feather";
 
 import Loader from "common/ui/loader";
 import Paginator, { PageInfoProps } from "common/ui/paginator";
@@ -50,7 +58,7 @@ const UnsolvedProblemsPage: NextPage = () => {
 
   const fetchProblems = async () => {
     try {
-      const data = await ProblemApi.getProblems(page);
+      const data = await ProblemApi.getProblems(page, orderBy);
       setProblems(data.objects);
       setPageInfo(data.pageInfo)
     } catch (e) {
@@ -74,6 +82,70 @@ const UnsolvedProblemsPage: NextPage = () => {
         <meta name="description" content="홍익대학교에서 풀지 않은 문제" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Box p={4} my={4} borderWidth="1px" borderRadius="lg">
+        <Flex>
+          <Flex alignItems="center">
+            <Heading size="md">정렬 필터&nbsp;</Heading>
+            <Filter />
+          </Flex>
+          <Spacer />
+          <Box>
+            <Button
+              variant={orderBy.includes("tier") ? "solid" : "ghost"}
+              colorScheme="teal"
+              rightIcon={
+                orderBy === "tier_asc" ? <ArrowUpIcon /> :
+                  orderBy === "tier_desc" ? <ArrowDownIcon /> :
+                  <></>
+              }
+              onClick={() =>
+                router.push({
+                  pathname: '/unsolved_problems',
+                  query: { order_by: orderBy === "tier_asc" ? "tier_desc" : "tier_asc" }
+                })
+              }
+            >
+              AC Tier
+            </Button>
+            <Button
+              mx="2"
+              variant={orderBy.includes("solved_count") ? "solid" : "ghost"}
+              colorScheme="teal"
+              rightIcon={
+                orderBy === "solved_count_asc" ? <ArrowUpIcon /> :
+                  orderBy === "solved_count_desc" ? <ArrowDownIcon /> :
+                  <></>
+              }
+              onClick={() =>
+                router.push({
+                  pathname: '/unsolved_problems',
+                  query: { order_by: orderBy === "solved_count_desc" ? "solved_count_asc" : "solved_count_desc" }
+                })
+              }
+            >
+              맞힌 사람 수
+            </Button>
+            <Button
+              variant={orderBy.includes("submission_count") ? "solid" : "ghost"}
+              colorScheme="teal"
+              rightIcon={
+                orderBy === "submission_count_asc" ? <ArrowUpIcon /> :
+                  orderBy === "submission_count_desc" ? <ArrowDownIcon /> :
+                  <></>
+              }
+              onClick={() =>
+                router.push({
+                  pathname: '/unsolved_problems',
+                  query: { order_by: orderBy === "submission_count_desc" ? "submission_count_asc" : "submission_count_desc" }
+                })
+              }
+            >
+              제출 수
+            </Button>
+          </Box>
+        </Flex>
+      </Box>
 
       <Table variant="simple">
         <Thead>
@@ -104,7 +176,7 @@ const UnsolvedProblemsPage: NextPage = () => {
               </a>
             </Td>
             <Td>{problem.title}</Td>
-            <Td>{problem.solvedCount}</Td>
+            <Td><Text as="b" fontSize="lg">{problem.solvedCount}</Text><Text as="span" fontSize="xs"> of {problem.submissionCount}</Text></Td>
           </Tr>
         ))}
         </Tbody>
