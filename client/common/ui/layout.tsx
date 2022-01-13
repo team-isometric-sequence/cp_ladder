@@ -128,7 +128,7 @@ const Layout: React.FC = ({ children }) => {
         )}
       </Box>
 
-      <Box p={4}>
+      <Box>
         {children}
       </Box>
     </>
