@@ -20,14 +20,22 @@ defmodule CpLadder.Crawler.BojCrawler do
   end
 
   def crawl_school(school) do
-    school_ranking_page_html = HTTPoison.get!("https://www.acmicpc.net/ranklist/school", [], [timeout: 500_000, recv_timeout: 500_000]).body
-    {:ok, href} = extract_school_url_from_ranking(school_ranking_page_html, school)
+    path = try do
+      school_ranking_page_html = HTTPoison.get!("https://www.acmicpc.net/ranklist/school", [], [timeout: 500_000, recv_timeout: 500_000]).body
+      {:ok, href} = extract_school_url_from_ranking(school_ranking_page_html, school)
+      href
+    rescue
+      _ ->
+        school_ranking_page_html = HTTPoison.get!("https://www.acmicpc.net/ranklist/school/2", [], [timeout: 500_000, recv_timeout: 500_000]).body
+        {:ok, href} = extract_school_url_from_ranking(school_ranking_page_html, school)
+        href
+    end
 
     1..20
     |> Enum.reduce_while(
         :ok,
         fn (page, acc) ->
-          url = "https://www.acmicpc.net" <> href <> "/" <> Integer.to_string(page)
+          url = "https://www.acmicpc.net" <> path <> "/" <> Integer.to_string(page)
           response = HTTPoison.get!(url, [], [timeout: 500_000, recv_timeout: 500_000])
 
           case response.status_code do
@@ -53,7 +61,7 @@ defmodule CpLadder.Crawler.BojCrawler do
                         HonorFarming.find_or_create_problem_solver(problem.id, boj_user.id)
 
                         problem
-                        |> HonorFarming.update_problem(%{is_already_solved: true})
+                        |> HonorFarming.update_problem(%{school_related_field(school) => true, is_already_solved: true})
                       end
                     )
                   end
@@ -64,7 +72,18 @@ defmodule CpLadder.Crawler.BojCrawler do
           end
         end
       )
-    href
+    path
+  end
+
+  defp school_related_field(school) do
+    case school do
+      "홍익대학교" -> :is_solved_by_hongik
+      "이화여자대학교" -> :is_solved_by_ehwa
+      "서강대학교" -> :is_solved_by_sogang
+      "숙명여자대학교" -> :is_solved_by_sookmyeong
+      "연세대학교" -> :is_solved_by_yonsei
+      _ -> :is_already_solved
+    end
   end
 
   defp extract_problems_from_index_page(html) do

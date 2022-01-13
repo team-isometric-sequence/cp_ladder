@@ -12,6 +12,13 @@ defmodule Mix.Tasks.UpdateFromBoj do
     Mix.Task.run "app.start"
 
     CpLadder.Crawler.BojCrawler.crawl_problems()
-    CpLadder.Crawler.BojCrawler.crawl_school("홍익대학교")
+    if rem(Time.utc_now().hour, 2) == 0 do
+      CpLadder.Crawler.BojCrawler.crawl_school("홍익대학교")
+      CpLadder.Crawler.BojCrawler.crawl_school("서강대학교")
+    else
+      CpLadder.Crawler.BojCrawler.crawl_school("이화여자대학교")
+      CpLadder.Crawler.BojCrawler.crawl_school("숙명여자대학교")
+      CpLadder.Crawler.BojCrawler.crawl_school("연세대학교")
+    end
   end
 end

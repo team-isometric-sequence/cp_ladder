@@ -26,10 +26,9 @@ defmodule CpLadder.HonorFarming do
   @spec list_unsolved_problems(keyword | map) :: Scrivener.Page.t(Problem)
   def list_unsolved_problems(params) do
     allow_unranked = params |> Map.get("allow_unranked", 0)
+    school = params |> Map.get("school", "hongik")
 
-    query =
-      Problem
-      |> where([p], p.is_solvable == true and p.is_already_solved == false)
+    query = filter_by_school(school)
 
     query = if allow_unranked == 1 do
       query
@@ -44,6 +43,15 @@ defmodule CpLadder.HonorFarming do
       |> Repo.paginate(params)
 
     page
+  end
+  defp filter_by_school(school) do
+    case school do
+      "ehwa" -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_ehwa == false)
+      "sogang" -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_sogang == false)
+      "sookmyeong" -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_sookmyeong == false)
+      "yonsei" -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_yonsei == false)
+      _ -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_hongik == false)
+    end
   end
 
   defp generate_filter_option(params) do

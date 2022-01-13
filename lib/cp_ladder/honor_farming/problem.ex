@@ -13,6 +13,12 @@ defmodule CpLadder.HonorFarming.Problem do
     field :is_solvable, :boolean
     field :is_already_solved, :boolean
 
+    field :is_solved_by_hongik, :boolean
+    field :is_solved_by_ehwa, :boolean
+    field :is_solved_by_sogang, :boolean
+    field :is_solved_by_sookmyeong, :boolean
+    field :is_solved_by_yonsei, :boolean
+
     timestamps()
   end
 
@@ -25,7 +31,13 @@ defmodule CpLadder.HonorFarming.Problem do
       :solved_count,
       :submission_count,
       :is_solvable,
-      :is_already_solved
+      :is_already_solved,
+
+      :is_solved_by_hongik,
+      :is_solved_by_ehwa,
+      :is_solved_by_sogang,
+      :is_solved_by_sookmyeong,
+      :is_solved_by_yonsei
     ]
 
     problem
