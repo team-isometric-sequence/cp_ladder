@@ -127,7 +127,7 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
                 }
                 onClick={() =>
                   router.push({
-                    pathname: '/unsolved_problems',
+                    pathname: `/unsolved_problems/${schoolName}`,
                     query: { order_by: orderBy === "tier_asc" ? "tier_desc" : "tier_asc" }
                   })
                 }
@@ -145,7 +145,7 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
                 }
                 onClick={() =>
                   router.push({
-                    pathname: '/unsolved_problems',
+                    pathname: `/unsolved_problems/${schoolName}`,
                     query: { order_by: orderBy === "solved_count_desc" ? "solved_count_asc" : "solved_count_desc" }
                   })
                 }
@@ -162,7 +162,7 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
                 }
                 onClick={() =>
                   router.push({
-                    pathname: '/unsolved_problems',
+                    pathname: `/unsolved_problems/${schoolName}`,
                     query: { order_by: orderBy === "submission_count_desc" ? "submission_count_asc" : "submission_count_desc" }
                   })
                 }
