@@ -24,6 +24,8 @@ import { LinkIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { Filter } from "react-feather";
 
 import Loader from "common/ui/loader";
+import Page, { IPage } from "common/ui/page";
+
 import Paginator, { PageInfoProps } from "common/ui/paginator";
 
 import SolvedacBadge from "common/components/solvedac-badge";
@@ -38,7 +40,7 @@ type IProblem = {
   submissionCount: number
 };
 
-const UnsolvedProblemsPage: NextPage = () => {
+const UnsolvedProblemsPage: NextPage<IPage> = ({ isLoggedIn }) => {
   const router = useRouter();
 
   const page = parseInt(router.query.page as string || "1");
@@ -76,7 +78,7 @@ const UnsolvedProblemsPage: NextPage = () => {
   if (error) return <div>에러가 발생했습니다....ㅜ</div>;
 
   return (
-    <div>
+    <Page isLoggedIn={isLoggedIn}>
       <Head>
         <title>홍익대학교에서 풀지 않은 문제</title>
         <meta name="description" content="홍익대학교에서 풀지 않은 문제" />
@@ -183,7 +185,7 @@ const UnsolvedProblemsPage: NextPage = () => {
       </Table>
 
       <Paginator pageInfo={pageInfo as PageInfoProps} setPage={setPage} />
-    </div>
+    </Page>
   )
 }
 

@@ -5,7 +5,6 @@ import { nest } from "recompose";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import AppContext, { AppContextProvider } from "common/contexts/app-context";
-import AuthenticationWrapper from 'common/ui/authentication-wrapper';
 
 const Providers = nest( AppContextProvider );
 
@@ -16,9 +15,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <AppContext.Consumer>
           {({ isLoggedIn }) => {
             return (
-              <AuthenticationWrapper isLoggedIn={isLoggedIn || false}>
-                <Component {...pageProps} />
-              </AuthenticationWrapper>
+              <Component isLoggedIn={isLoggedIn || false} {...pageProps} />
             );
           }}
         </AppContext.Consumer>

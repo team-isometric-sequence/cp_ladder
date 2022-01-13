@@ -14,14 +14,13 @@ import {
 } from "@chakra-ui/react";
 
 import Loader from "common/ui/loader";
-import AppContext from "common/contexts/app-context";
+import Page, { IPage } from "common/ui/page";
+
 import LocalStorageService from "common/services/local-storage-service";
 
 import UserApi from "api/user-api";
 
-const LoginPage = () => {
-  const { isLoggedIn } = useContext(AppContext);
-
+const LoginPage: React.FC<IPage> = ({ isLoggedIn }) => {
   const [key, setKey] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,8 +33,7 @@ const LoginPage = () => {
   const { next } = router.query;
 
   return (
-    <div>
-
+    <Page isLoggedIn={isLoggedIn}>
       <Box textAlign="center">
         <Heading>Login</Heading>
       </Box>
@@ -111,7 +109,7 @@ const LoginPage = () => {
           )}
         </Formik>
       </Box>
-    </div>
+    </Page>
   )
 }
 

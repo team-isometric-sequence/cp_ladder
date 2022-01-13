@@ -4,12 +4,12 @@ import UserApi from "api/user-api";
 import { LoginRequiredError } from "common/exceptions";
 
 const AppContext = createContext<{
-  isLoggedIn?: boolean;
+  isLoggedIn: boolean;
   user?: {
     username?: string;
     email? : string;
   };
-}>({});
+}>({ isLoggedIn: false });
 
 const AppContextProvider: React.FC = ({
   children
