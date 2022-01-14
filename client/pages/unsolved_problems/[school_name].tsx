@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 
 import {
+  Alert,
+  AlertIcon,
   Table,
   Thead,
   Tbody,
@@ -108,7 +110,14 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box p={4}>
+      <Box p={4} pt={8}>
+        <Box>
+          <Alert status='info' variant='left-accent'>
+            <AlertIcon />
+            데이터는 2시간 단위로 갱신되어요. 문제를 풀자마자 바로 갱신되지 않을 수도 있으니 참고해주세요!
+          </Alert>
+        </Box>
+
         <Box p={4} my={4} borderWidth="1px" borderRadius="lg">
           <Flex>
             <Flex alignItems="center">
