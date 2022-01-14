@@ -1,19 +1,40 @@
-# CpLadder
+# Requirements
 
-To start your Phoenix server:
+- Elixir 1.12.3
+- Phoenix 1.6.2
+- Postgres (Database)
+- Next.js (with Typescript)
+  - Chakra UI (for UI component)
+  - Emotion (for styled-component)
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+# Installation
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+0. 먼저 준비해야 하는 것들
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+- elixir
+- node.js (16.13.0 이상)
+- yarn (npm install yarn) - JS 패키지 매니저
 
-## Learn more
+위의 준비문들이 세팅되어 있다면 `./cp install` 명령어로 설치하시면 됩니다.
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+# Running
+
+## Database Setup
+
+1. Postgres 설치 후 백그라운드에서 돌아가도록 세팅 (필요하다면 Docker 기반으로 세팅할 수 있도록 합시다.)
+2. createdb cp_ladder_dev (cp_ladder_dev 이라는 이름의 Database가 만들어져 있으면 됩니다.)
+3. 프로젝트 홈 디렉토리에서 `./cp migrate`
+
+postgres 데이터베이스에 패스워드를 설정해준 적이 있다면, `DB_PASSWORD` 환경변수를 설정해주시길 바랍니다.
+
+## Server
+
+`./cp run server`
+
+# Development
+
+(TBD)
+
+# Test 실행하기
+
+(TBD)
