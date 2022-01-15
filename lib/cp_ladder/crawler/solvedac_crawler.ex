@@ -3,6 +3,8 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
   alias CpLadder.HonorFarming
   alias CpLadder.HonorFarming.Problem
 
+  alias CpLadder.Categorization
+
   def crawl_solvedac_tiers do
     problems = HonorFarming.list_problems()
     page_size = 100
@@ -46,7 +48,8 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
                 "level" => tier,
                 "acceptedUserCount" => solved_count,
                 "averageTries" => submission_rate,
-                "isSolvable" => is_solvable
+                "isSolvable" => is_solvable,
+                "tags" => tags
               } = json
 
               problem = HonorFarming.find_or_create_problem(boj_pk)
@@ -58,10 +61,21 @@ defmodule CpLadder.Crawler.SolvedacCrawler do
                   submission_count: round(solved_count * submission_rate),
                   is_solvable: is_solvable
                 })
+
+              tags
+              |> Enum.each(fn tag -> update_tagging(problem, tag) end)
             end
           )
       _ ->
         nil
     end
+  end
+
+  defp update_tagging(problem, tag) do
+    %{
+      "key" => tag_name
+    } = tag
+
+    Categorization.add_to_problem(tag_name, problem)
   end
 end
