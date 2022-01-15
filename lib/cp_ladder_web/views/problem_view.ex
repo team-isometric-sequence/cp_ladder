@@ -19,7 +19,8 @@ defmodule CpLadderWeb.ProblemView do
       title: problem.title,
       tier: problem.tier,
       solvedCount: problem.solved_count,
-      submissionCount: problem.submission_count
+      submissionCount: problem.submission_count,
+      tags: Enum.map(problem.taggings, fn tagging -> %{ name: tagging.tag_name } end)
     }
   end
 

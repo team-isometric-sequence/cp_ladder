@@ -2,6 +2,8 @@ defmodule CpLadder.HonorFarming.Problem do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias CpLadder.Categorization.Tagging
+
   schema "problems" do
     field :title, :string
     field :problem_number, :integer
@@ -18,6 +20,8 @@ defmodule CpLadder.HonorFarming.Problem do
     field :is_solved_by_sogang, :boolean
     field :is_solved_by_sookmyeong, :boolean
     field :is_solved_by_yonsei, :boolean
+
+    has_many :taggings, Tagging
 
     timestamps()
   end

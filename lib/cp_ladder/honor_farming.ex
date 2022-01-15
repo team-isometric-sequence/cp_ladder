@@ -10,6 +10,8 @@ defmodule CpLadder.HonorFarming do
   alias CpLadder.HonorFarming.BojUser
   alias CpLadder.HonorFarming.ProblemSolver
 
+  alias CpLadder.Categorization
+  alias CpLadder.Categorization.Tagging
   @doc """
   Returns the list of problems.
 
@@ -27,8 +29,10 @@ defmodule CpLadder.HonorFarming do
   def list_unsolved_problems(params) do
     allow_unranked = params |> Map.get("allow_unranked", 0)
     school = params |> Map.get("school", "hongik")
+    tag_name = params |> Map.get("tag", "")
 
     query = filter_by_school(school)
+    query = filter_by_tag(query, tag_name)
 
     query = if allow_unranked == 1 do
       query
@@ -40,10 +44,26 @@ defmodule CpLadder.HonorFarming do
     page =
       query
       |> order_by(^generate_filter_option(params))
+      |> preload(:taggings)
       |> Repo.paginate(params)
 
     page
   end
+
+  defp filter_by_tag(query, tag_name) do
+    case tag_name do
+      "" -> query
+      _ ->
+        tag = Categorization.find_or_create_tag(tag_name)
+
+        taggings =
+          Tagging
+          |> where([t], t.tag_id == ^tag.id)
+
+        from(p in query, join: s in subquery(taggings), on: s.id == p.id)
+    end
+  end
+
   defp filter_by_school(school) do
     case school do
       "ehwa" -> Problem |> where([p], p.is_solvable == true and p.is_solved_by_ehwa == false)
