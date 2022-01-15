@@ -13,6 +13,9 @@ import {
   Tr,
   Td,
   Th,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   IconButton,
   Box,
   Heading,
@@ -23,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { LinkIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 
-import { Filter } from "react-feather";
+import { Filter, Tag as LabelIcon } from "react-feather";
 
 import Loader from "common/ui/loader";
 import Page, { IPage } from "common/ui/page";
@@ -39,7 +42,8 @@ type IProblem = {
   title: string,
   tier: number,
   solvedCount: number,
-  submissionCount: number
+  submissionCount: number,
+  tags: Array<{ name: string }>
 };
 
 const getSchoolFullName = (schoolName: string) => {
@@ -63,6 +67,7 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
   const schoolName = router.query.school_name as string || "";
   const page = parseInt(router.query.page as string || "1");
   const orderBy = router.query.order_by as string || "tier_asc";
+  const tagName = router.query.tag as string || "";
 
   const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState<IProblem[]>([]);
@@ -78,7 +83,14 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
 
   const fetchProblems = async () => {
     try {
-      const data = await ProblemApi.getProblems(page, orderBy, schoolName);
+      const payloads = {
+        page,
+        orderBy,
+        schoolName,
+        tagName
+      }
+
+      const data = await ProblemApi.getProblems(payloads);
       setProblems(data.objects);
       setPageInfo(data.pageInfo)
     } catch (e) {
@@ -212,7 +224,19 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
                   />
                 </a>
               </Td>
-              <Td>{problem.title}</Td>
+              <Td>
+                {problem.title}
+                {problem.tags.length > 0 &&
+                  <Box>
+                    {problem.tags.map((tag) => (
+                      <Tag marginTop={1} marginX={1} marginLeft={0} size={"md"} key={`${problem.problemNumber}-${tag.name}`} variant='subtle' colorScheme='cyan'>
+                        <TagLeftIcon boxSize='1rem' as={LabelIcon} />
+                        <TagLabel>{tag.name}</TagLabel>
+                      </Tag>
+                    ))}
+                  </Box>
+                }
+              </Td>
               <Td><Text as="b" fontSize="lg">{problem.solvedCount}</Text><Text as="span" fontSize="xs"> of {problem.submissionCount}</Text></Td>
             </Tr>
           ))}
