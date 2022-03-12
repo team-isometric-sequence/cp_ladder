@@ -60,7 +60,7 @@ defmodule CpLadder.HonorFarming do
           Tagging
           |> where([t], t.tag_id == ^tag.id)
 
-        from(p in query, join: s in subquery(taggings), on: s.id == p.id)
+        from(p in query, join: s in subquery(taggings), on: s.problem_id == p.id)
     end
   end
 
