@@ -24,6 +24,7 @@ import {
   Button,
   Text,
   Link,
+  Switch
 } from "@chakra-ui/react";
 import { LinkIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 
@@ -35,6 +36,8 @@ import Page, { IPage } from "common/ui/page";
 import Paginator, { PageInfoProps } from "common/ui/paginator";
 
 import SolvedacBadge from "common/components/solvedac-badge";
+
+import useLocalStorage from "common/hooks/use-storage";
 
 import ProblemApi from "api/problem-api";
 
@@ -69,6 +72,8 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
   const page = parseInt(router.query.page as string || "1");
   const orderBy = router.query.order_by as string || "tier_asc";
   const tagName = router.query.tag as string || "";
+
+  const [spoilerEnabled, setSpoilerEnabled] = useLocalStorage<boolean>("spoiler-enabled", true);
 
   const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState<IProblem[]>([]);
@@ -199,6 +204,14 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
             </Box>
           </Flex>
         </Box>
+
+        <Box p={2}>
+          <Flex justifyContent="flex-end" alignItems="center">
+            <b>스포일러</b>
+            <Switch m={2} isChecked={spoilerEnabled} onChange={() => setSpoilerEnabled(!spoilerEnabled)} />
+          </Flex>
+        </Box>
+
       </Box>
 
       <Box p={4}>
@@ -232,7 +245,7 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
               </Td>
               <Td>
                 {problem.title}
-                {problem.tags.length > 0 &&
+                {problem.tags.length > 0 && spoilerEnabled &&
                   <Box>
                     {problem.tags.map((tag) => (
                       <Link key={`${problem.problemNumber}-${tag.name}`} href={`/unsolved_problems/${schoolName}?tag=${tag.name}`}>
