@@ -23,6 +23,7 @@ import {
   Spacer,
   Button,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import { LinkIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 
@@ -75,9 +76,14 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
   const [error, setError] = useState<any>(null);
 
   const setPage = (pageNum: number) => {
+    const basePaginationQuery = { page: pageNum, order_by: orderBy };
+    const paginationQuery = (tagName !== "") ?
+      { ...basePaginationQuery, tag: tagName }
+      : basePaginationQuery;
+
     router.push({
       pathname: `/unsolved_problems/${schoolName}`,
-      query: { page: pageNum, order_by: orderBy }
+      query: paginationQuery
     })
   }
 
@@ -229,10 +235,20 @@ const UnsolvedProblemsDetailPage: NextPage<IPage> = ({ isLoggedIn }) => {
                 {problem.tags.length > 0 &&
                   <Box>
                     {problem.tags.map((tag) => (
-                      <Tag marginTop={1} marginX={1} marginLeft={0} size={"md"} key={`${problem.problemNumber}-${tag.name}`} variant='subtle' colorScheme='cyan'>
-                        <TagLeftIcon boxSize='1rem' as={LabelIcon} />
-                        <TagLabel>{tag.name}</TagLabel>
-                      </Tag>
+                      <Link key={`${problem.problemNumber}-${tag.name}`} href={`/unsolved_problems/${schoolName}?tag=${tag.name}`}>
+                        <Tag
+                          marginTop={1}
+                          marginX={1}
+                          marginLeft={0}
+                          size={"md"}
+                          variant='subtle'
+                          bg={tag.name == tagName ? "cyan.300" : 'cyan.100'}
+                          _hover={{ bg: "cyan.300" }}
+                        >
+                          <TagLeftIcon boxSize='1rem' as={LabelIcon} />
+                          <TagLabel>{tag.name}</TagLabel>
+                        </Tag>
+                      </Link>
                     ))}
                   </Box>
                 }
